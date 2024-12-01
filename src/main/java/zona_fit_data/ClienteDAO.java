@@ -99,28 +99,85 @@ public class ClienteDAO  implements iCliente{
 
     @Override
     public boolean atualizarCliente(Cliente cliente) {
+        PreparedStatement ps;
+        ResultSet rs;
+        Connection con = Conexion.getConexion();
+        String sql = "UPDATE cliente SET nome=?, apelido=?, membro=? "+
+                "WHERE id = ?";
+        try {
+            ps = con.prepareStatement(sql);
+            ps.setString(1,cliente.getNome());
+            ps.setString(2,cliente.getApelido());
+            ps.setInt(3,cliente.getMembro());
+            ps.setInt(4,cliente.getId());
+            ps.execute();
+            return true;
+        }catch (Exception e){
+            System.out.println("error ao tentar modificar cliente" + e.getMessage());
+        }finally {
+            try {
+                con.close();
+            }catch (Exception e){
+                System.out.println("error ao tentar terminar conexão = " + e.getMessage());
+            }
+        }
         return false;
     }
 
     @Override
     public boolean removerCliente(Cliente cliente) {
+        PreparedStatement ps;
+        ResultSet rs;
+        Connection con = Conexion.getConexion();
+        String sql = "DELETE FROM cliente WHERE id = ?";
+        try {
+        ps = con.prepareStatement(sql);
+        ps.setInt(1,cliente.getId());
+        ps.execute();
+        return true;
+        }catch (Exception e){
+            System.out.println("error ao deletar cliente = " + e.getMessage());
+        }finally {
+            try {
+                con.close();
+            }catch (Exception e){
+                System.out.println("error ao tentar terminar conexão = " + e.getMessage());
+            }
+        }
         return false;
     }
 
+
+
     public static void main(String[] args) {
         System.out.println("-------------------");
-
-
        var clienteDAO = new ClienteDAO();
-        var novoCliente = new Cliente("Daniel","ortix",200);
-        var adicinar = clienteDAO.addCliente(novoCliente);
-        if(adicinar){
-            System.out.println("cliente adicinado = " + novoCliente);
-        }else {
-            System.out.println("não adicinado = " + novoCliente);
-        }
+//        var novoCliente = new Cliente("pablo","poa",200);
+//        var adicinar = clienteDAO.addCliente(novoCliente);
+//        if(adicinar){
+//            System.out.println("cliente adicinado = " + novoCliente);
+//        }else {
+//            System.out.println("não adicinado = " + novoCliente);
+//        }
 
-
+//        Deletar cliente
+//        var detetarCliente = new Cliente(1) ;
+//        var clienteDeletado = clienteDAO.removerCliente(detetarCliente);
+//        if (clienteDeletado) {
+//            System.out.println("Cliente deletado com sucesso.");
+//        } else {
+//            System.out.println("Falha ao deletar o cliente.");
+//        }
+//
+//    Modificar cliente
+//        var modificarCliente = new Cliente(1,"joão","baptista",400);
+//        var modificado = clienteDAO.atualizarCliente(modificarCliente);
+//        if (modificado){
+//            System.out.println("cliente modificado = " + modificado);
+//        }else {
+//            System.out.println("cliente não modificado = " + modificado);
+//        }
+//
         System.out.println("Listar Clientes");
         try{
             var clientes = clienteDAO.listarClientes();
