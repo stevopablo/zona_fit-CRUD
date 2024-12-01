@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClienteDAO  implements iCliente{
-
+//DAO Data access object
 
     @Override
     public List<Cliente> listarClientes() {
